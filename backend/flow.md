@@ -247,7 +247,7 @@ The `accounts` app contains all user management, authentication, role access con
 
 #### `accounts/authentication.py`
 - **Purpose:** Custom DRF authentication backend.
-- **Class:** `JWTCookieAuthentication` extracts the JWT access token from the `access_token` cookie first (falling back to the `Authorization: Bearer <token>` header). Validates token signature, retrieves the user, checks if `is_active` is True, verifies the 180s inactivity window, and updates `last_activity` to the current time.
+- **Class:** `JWTCookieAuthentication` extracts the JWT access token from the `access_token` cookie first (falling back to the `Authorization: Bearer <token>` header). Validates token signature, retrieves the user, checks if `is_active` is True, verifies the 180s inactivity window, and updates `last_activity` to the current time. Enforces CSRF validation via `enforce_csrf(request)` for state-changing requests when authenticated via cookies.
 
 #### `accounts/permissions.py`
 - **Purpose:** DRF authorization guards for API views.

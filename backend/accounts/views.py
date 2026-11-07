@@ -14,6 +14,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
 from .models import User, UserRole, Device, PasswordResetOTP
+from .authentication import enforce_csrf
 from .serializers import (
     CustomerRegistrationSerializer,
     LoginSerializer,
@@ -221,6 +222,7 @@ class LogoutView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        enforce_csrf(request)
         user = getattr(request, 'user', None)
         if user and user.is_authenticated:
             user.last_activity = None
@@ -257,6 +259,7 @@ class RefreshTokenView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        enforce_csrf(request)
         refresh_token = request.COOKIES.get('refresh_token')
         if not refresh_token:
             return Response(
@@ -615,6 +618,13 @@ class CustomerDashboardView(APIView):
             "role": request.user.role,
             "user": UserSerializer(request.user).data
         })
+
+    def post(self, request):
+        return Response({
+            "message": f"Hello {request.user.full_name}! Customer action executed successfully.",
+            "role": request.user.role,
+            "user": UserSerializer(request.user).data
+        }, status=status.HTTP_200_OK)
 
 
 class CafeOwnerDashboardView(APIView):

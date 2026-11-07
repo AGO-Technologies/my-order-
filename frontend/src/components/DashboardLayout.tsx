@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../i18n';
 import { Phase1Modal } from './Phase1Modal';
 import { Clock, Menu } from 'lucide-react';
 import { TypographicLogo } from './TypographicLogo';
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -59,10 +61,10 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
             <div className="hidden md:flex items-center gap-2">
               <span className="text-sm font-semibold text-[#16324F]">
-                University Café Pre-Order System
+                {t('common.systemTitle')}
               </span>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#16324F]/5 text-[#16324F] font-mono font-medium">
-                Phase 1
+                {t('common.phase1')}
               </span>
             </div>
           </div>
@@ -70,7 +72,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           <div className="flex items-center gap-3 sm:gap-4 text-xs">
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600">
               <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Inactivity Guard: <strong className="text-slate-800">3 min</strong></span>
+              <span>{t('common.inactivityGuard', { minutes: 3 })}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#0F8B8D]" />

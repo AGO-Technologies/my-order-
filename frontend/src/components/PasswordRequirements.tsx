@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, Circle } from 'lucide-react';
+import { useTranslation } from '../i18n';
 import type { PasswordRules } from '../types/auth';
 
 interface PasswordRequirementsProps {
@@ -7,17 +8,19 @@ interface PasswordRequirementsProps {
 }
 
 export const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({ rules }) => {
+  const { t } = useTranslation();
+
   const requirements = [
-    { label: 'At least 9 characters', satisfied: rules.minLength },
-    { label: 'At least one uppercase letter (A-Z)', satisfied: rules.hasUpper },
-    { label: 'At least one lowercase letter (a-z)', satisfied: rules.hasLower },
-    { label: 'At least one number (0-9)', satisfied: rules.hasNumber },
-    { label: 'At least one special character (!@#$%^&*...)', satisfied: rules.hasSpecial },
+    { label: t('auth.pwReqLength'), satisfied: rules.minLength },
+    { label: t('auth.pwReqUpper'), satisfied: rules.hasUpper },
+    { label: t('auth.pwReqLower'), satisfied: rules.hasLower },
+    { label: t('auth.pwReqNumber'), satisfied: rules.hasNumber },
+    { label: t('auth.pwReqSpecial'), satisfied: rules.hasSpecial },
   ];
 
   return (
     <div className="mt-2 space-y-1.5 p-3 rounded-xl bg-slate-50/80 border border-slate-200 text-xs">
-      <p className="font-semibold text-[#16324F] mb-1">Password Requirements:</p>
+      <p className="font-semibold text-[#16324F] mb-1">{t('auth.pwReqTitle')}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
         {requirements.map((req, idx) => (
           <div

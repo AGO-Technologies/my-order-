@@ -18,9 +18,12 @@ import {
 import { apiRequest } from '../../services/api';
 import { TypographicLogo } from '../../components/TypographicLogo';
 import { PasswordRequirements, evaluatePasswordRules } from '../../components/PasswordRequirements';
+import { LanguageSelector } from '../../components/LanguageSelector';
+import { useTranslation } from '../../i18n';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -150,14 +153,19 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Top Bar with Language Selector */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-10">
+        <LanguageSelector variant="auth" />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-2xl flex flex-col items-center">
         <TypographicLogo size="lg" showSubtitle={true} />
         <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-[#16324F] font-serif">
-          Customer Registration
+          {t('auth.registerTitle')}
         </h2>
         <p className="mt-1 text-center text-sm text-slate-600">
-          Create your account for the University Café Pre-Order System
+          {t('auth.registerSubtitle')}
         </p>
       </div>
 
@@ -174,14 +182,14 @@ export const RegisterPage: React.FC = () => {
             {/* Section 1: Personal Info */}
             <div className="border-b border-slate-100 pb-5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#16324F]/70 mb-4">
-                Personal Identification
+                {t('auth.personalInfo')}
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Full Name <span className="text-red-500">*</span>
+                    {t('auth.fullNameLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -193,7 +201,7 @@ export const RegisterPage: React.FC = () => {
                       required
                       value={formData.full_name}
                       onChange={handleChange}
-                      placeholder="Abba Jifar Jimma"
+                      placeholder={t('auth.fullNamePlaceholder')}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
@@ -205,7 +213,7 @@ export const RegisterPage: React.FC = () => {
                 {/* Student ID */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Student ID <span className="text-red-500">*</span>
+                    {t('auth.studentIdLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -217,11 +225,11 @@ export const RegisterPage: React.FC = () => {
                       required
                       value={formData.student_id}
                       onChange={handleChange}
-                      placeholder="RU1122/19"
+                      placeholder={t('auth.studentIdPlaceholder')}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">Format: RU followed by 4 digits, slash, 2 digits</p>
+                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.studentIdHint')}</p>
                   {getFieldError('student_id') && (
                     <p className="mt-1 text-xs text-red-600">{getFieldError('student_id')}</p>
                   )}
@@ -230,7 +238,7 @@ export const RegisterPage: React.FC = () => {
                 {/* Email */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Gmail Address <span className="text-red-500">*</span>
+                    {t('auth.emailLabelGmail')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -242,11 +250,11 @@ export const RegisterPage: React.FC = () => {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="yourname@gmail.com"
+                      placeholder={t('auth.emailPlaceholder')}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">Only @gmail.com addresses accepted</p>
+                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.gmailOnlyHint')}</p>
                   {getFieldError('email') && (
                     <p className="mt-1 text-xs text-red-600">{getFieldError('email')}</p>
                   )}
@@ -255,7 +263,7 @@ export const RegisterPage: React.FC = () => {
                 {/* Phone Number */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Phone Number <span className="text-red-500">*</span>
+                    {t('auth.phoneLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -272,7 +280,7 @@ export const RegisterPage: React.FC = () => {
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">Exactly 10 digits starting with 09 or 07</p>
+                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.phoneHint')}</p>
                   {getFieldError('phone_number') && (
                     <p className="mt-1 text-xs text-red-600">{getFieldError('phone_number')}</p>
                   )}
@@ -281,7 +289,7 @@ export const RegisterPage: React.FC = () => {
                 {/* FAN */}
                 <div className="md:col-span-2">
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    FAN (Financial Account Number) <span className="text-red-500">*</span>
+                    {t('auth.fanLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -293,11 +301,11 @@ export const RegisterPage: React.FC = () => {
                       required
                       value={formData.fan}
                       onChange={handleChange}
-                      placeholder="e.g. 987654321"
+                      placeholder={t('auth.fanPlaceholder')}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">Numeric characters only</p>
+                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.fanHint')}</p>
                   {getFieldError('fan') && (
                     <p className="mt-1 text-xs text-red-600">{getFieldError('fan')}</p>
                   )}
@@ -308,14 +316,14 @@ export const RegisterPage: React.FC = () => {
             {/* Section 2: Campus Location */}
             <div className="border-b border-slate-100 pb-5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#16324F]/70 mb-4">
-                Campus Residence Location
+                {t('auth.campusDining')}
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Zone */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Zone <span className="text-red-500">*</span>
+                    {t('auth.zoneLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -328,10 +336,10 @@ export const RegisterPage: React.FC = () => {
                       onChange={handleChange}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     >
-                      <option value="1">Zone 1</option>
-                      <option value="2">Zone 2</option>
-                      <option value="3">Zone 3</option>
-                      <option value="4">Zone 4</option>
+                      <option value="1">{t('auth.zone1')}</option>
+                      <option value="2">{t('auth.zone2')}</option>
+                      <option value="3">{t('auth.zone3')}</option>
+                      <option value="4">{t('auth.zone4')}</option>
                     </select>
                   </div>
                   {getFieldError('zone') && (
@@ -342,7 +350,7 @@ export const RegisterPage: React.FC = () => {
                 {/* Block */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Block <span className="text-red-500">*</span>
+                    {t('auth.blockLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -355,11 +363,11 @@ export const RegisterPage: React.FC = () => {
                       maxLength={2}
                       value={formData.block}
                       onChange={handleChange}
-                      placeholder="1-99"
+                      placeholder={t('auth.blockPlaceholder')}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">1-2 digits</p>
+                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.digitsHint')}</p>
                   {getFieldError('block') && (
                     <p className="mt-1 text-xs text-red-600">{getFieldError('block')}</p>
                   )}
@@ -368,7 +376,7 @@ export const RegisterPage: React.FC = () => {
                 {/* Room */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Room <span className="text-red-500">*</span>
+                    {t('auth.roomLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -381,11 +389,11 @@ export const RegisterPage: React.FC = () => {
                       maxLength={2}
                       value={formData.room}
                       onChange={handleChange}
-                      placeholder="1-99"
+                      placeholder={t('auth.roomPlaceholder')}
                       className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">1-2 digits</p>
+                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.digitsHint')}</p>
                   {getFieldError('room') && (
                     <p className="mt-1 text-xs text-red-600">{getFieldError('room')}</p>
                   )}
@@ -396,14 +404,14 @@ export const RegisterPage: React.FC = () => {
             {/* Section 3: Password */}
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#16324F]/70 mb-4">
-                Password
+                {t('auth.passwordSection')}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Password */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Password <span className="text-red-500">*</span>
+                    {t('auth.passwordLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -434,7 +442,7 @@ export const RegisterPage: React.FC = () => {
                 {/* Confirm Password */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Confirm Password <span className="text-red-500">*</span>
+                    {t('auth.confirmPasswordLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -475,11 +483,11 @@ export const RegisterPage: React.FC = () => {
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Registering Customer Account...</span>
+                  <span>{t('auth.registering')}</span>
                 </>
               ) : (
                 <>
-                  <span>Complete Customer Registration</span>
+                  <span>{t('auth.completeRegistration')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -488,9 +496,9 @@ export const RegisterPage: React.FC = () => {
 
           <div className="mt-6 border-t border-slate-200 pt-5 text-center">
             <p className="text-xs text-slate-600">
-              Already have an account?{' '}
+              {t('auth.alreadyRegistered')}{' '}
               <Link to="/login" className="font-semibold text-[#0F8B8D] hover:underline">
-                Sign In
+                {t('common.signIn')}
               </Link>
             </p>
           </div>

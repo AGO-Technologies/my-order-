@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LanguageProvider, useTranslation } from './i18n';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Auth Pages
@@ -29,13 +30,14 @@ import { AdminRegisterCafePage } from './pages/admin/AdminRegisterCafePage';
 
 const RootRedirect: React.FC = () => {
   const { user, isAuthenticated, isLoading, getDashboardPath } = useAuth();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" />
-          <p className="text-sm text-slate-500 font-medium">Loading session...</p>
+          <p className="text-sm text-slate-500 font-medium">{t('common.loadingSession')}</p>
         </div>
       </div>
     );
@@ -50,9 +52,10 @@ const RootRedirect: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
           {/* Public Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -160,6 +163,7 @@ export const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </LanguageProvider>
   );
 };
 

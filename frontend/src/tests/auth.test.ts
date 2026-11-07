@@ -1,5 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { en } from '../i18n/en.ts';
+import { am } from '../i18n/am.ts';
+import { om } from '../i18n/om.ts';
+import { SUPPORTED_LANGUAGES } from '../i18n/types.ts';
 
 // 1. Password complexity evaluator logic
 function evaluatePasswordRules(password: string) {
@@ -136,4 +140,44 @@ test('Forgot Password flow validates Student ID format before submitting', () =>
   const invalidId = 'not-a-valid-id';
   assert.equal(validateStudentId(validId), true);
   assert.equal(validateStudentId(invalidId), false);
+});
+
+test('i18n supports English, Amharic, and Afaan Oromo with English as default', () => {
+  const codes = SUPPORTED_LANGUAGES.map((l) => l.code);
+  assert.deepEqual(codes, ['en', 'am', 'om']);
+  assert.equal(SUPPORTED_LANGUAGES[0].code, 'en');
+});
+
+test('i18n translation dictionaries have 100% complete key parity across en, am, and om', () => {
+  const enKeys = Object.keys(en).sort();
+  const amKeys = Object.keys(am).sort();
+  const omKeys = Object.keys(om).sort();
+
+  assert.deepEqual(amKeys, enKeys, 'Amharic keys must match English keys exactly');
+  assert.deepEqual(omKeys, enKeys, 'Afaan Oromo keys must match English keys exactly');
+});
+
+test('i18n parameter interpolation replaces placeholders correctly', () => {
+  const template = en['dashboard.greeting']; // 'Hello, {name}'
+  const rendered = template.replace('{name}', 'Abebe');
+  assert.equal(rendered, 'Hello, Abebe');
+
+  const templateAm = am['dashboard.greeting'];
+  const renderedAm = templateAm.replace('{name}', 'አበበ');
+  assert.equal(renderedAm, 'ሰላም፣ አበበ');
+});
+
+test('Zero emojis are present in all translation dictionaries', () => {
+  // Regex to detect common emoji ranges
+  const emojiRegex = /[\p{Extended_Pictographic}\u{1F300}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
+
+  for (const [key, val] of Object.entries(en)) {
+    assert.equal(emojiRegex.test(val), false, `en translation "${key}" contains an emoji: ${val}`);
+  }
+  for (const [key, val] of Object.entries(am)) {
+    assert.equal(emojiRegex.test(val), false, `am translation "${key}" contains an emoji: ${val}`);
+  }
+  for (const [key, val] of Object.entries(om)) {
+    assert.equal(emojiRegex.test(val), false, `om translation "${key}" contains an emoji: ${val}`);
+  }
 });

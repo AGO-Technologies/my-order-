@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, AlertTriangle, ShieldAlert, Monitor, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from '../../i18n';
 import { apiRequest, getOrCreateDeviceId } from '../../services/api';
 import { TypographicLogo } from '../../components/TypographicLogo';
+import { LanguageSelector } from '../../components/LanguageSelector';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, getDashboardPath, sessionExpired, setSessionExpired } = useAuth();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,7 +76,7 @@ export const LoginPage: React.FC = () => {
       } else if (err.status === 403 && err.data?.code === 'device_limit_reached') {
         setDeviceLimitError(err.data.detail);
       } else {
-        setErrorMsg(err.message || 'Invalid email or password.');
+        setErrorMsg(err.message || t('auth.invalidCredentials'));
       }
     } finally {
       setIsLoading(false);
@@ -81,14 +84,19 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      {/* Top Bar with Language Selector */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-10">
+        <LanguageSelector variant="auth" />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
         <TypographicLogo size="lg" showSubtitle={true} />
         <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-[#16324F] font-serif">
-          Sign In to Your Account
+          {t('auth.loginTitle')}
         </h2>
         <p className="mt-1 text-center text-sm text-slate-600">
-          Access your role-based University Café dashboard
+          {t('auth.loginSubtitle')}
         </p>
       </div>
 
@@ -99,9 +107,9 @@ export const LoginPage: React.FC = () => {
             <div className="mb-5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-2.5">
               <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-amber-950">Session Expired</p>
+                <p className="font-semibold text-amber-950">{t('auth.sessionExpiredTitle')}</p>
                 <p className="text-xs text-amber-800 mt-0.5">
-                  Your session has expired due to 3 minutes of inactivity. Please log in again to continue.
+                  {t('auth.sessionExpiredDesc')}
                 </p>
               </div>
             </div>
@@ -119,10 +127,9 @@ export const LoginPage: React.FC = () => {
             <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-900 text-sm flex items-start gap-2.5">
               <ShieldAlert className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-red-950">Account Temporarily Locked</p>
+                <p className="font-semibold text-red-950">{t('auth.accountLockedTitle')}</p>
                 <p className="text-xs text-red-800 mt-1">
-                  Too many consecutive failed login attempts. For your security, login is locked for{' '}
-                  <span className="font-mono font-bold text-red-900 text-sm">{lockoutSeconds}s</span>.
+                  {t('auth.accountLockedDesc', { seconds: lockoutSeconds })}
                 </p>
               </div>
             </div>
@@ -133,7 +140,7 @@ export const LoginPage: React.FC = () => {
             <div className="mb-5 p-3.5 rounded-xl bg-orange-50 border border-orange-200 text-orange-900 text-sm flex items-start gap-2.5">
               <Monitor className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-orange-950">Device Limit Reached</p>
+                <p className="font-semibold text-orange-950">{t('auth.deviceLimitTitle')}</p>
                 <p className="text-xs text-orange-800 mt-1">{deviceLimitError}</p>
               </div>
             </div>
@@ -149,7 +156,7 @@ export const LoginPage: React.FC = () => {
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[#16324F]/80">
-                Email Address
+                {t('auth.emailLabel')}
               </label>
               <div className="mt-1.5 relative rounded-lg shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -166,7 +173,7 @@ export const LoginPage: React.FC = () => {
                     setEmail(e.target.value);
                     if (sessionExpired) setSessionExpired(false);
                   }}
-                  placeholder="student@gmail.com"
+                  placeholder={t('auth.emailPlaceholder')}
                   className="block w-full pl-10 pr-3 py-2.5 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                 />
               </div>
@@ -175,13 +182,13 @@ export const LoginPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-[#16324F]/80">
-                  Password
+                  {t('auth.passwordLabel')}
                 </label>
                 <Link
                   to="/forgot-password"
                   className="text-xs font-semibold text-[#0F8B8D] hover:underline"
                 >
-                  Forgot Password?
+                  {t('auth.forgotPassword')}
                 </Link>
               </div>
               <div className="mt-1.5 relative rounded-lg shadow-2xs">
@@ -196,7 +203,7 @@ export const LoginPage: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder={t('auth.passwordPlaceholder')}
                   className="block w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
                 />
                 <button
@@ -218,13 +225,13 @@ export const LoginPage: React.FC = () => {
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Verifying credentials...</span>
+                  <span>{t('auth.verifyingCredentials')}</span>
                 </>
               ) : lockoutSeconds && lockoutSeconds > 0 ? (
-                <span>Locked ({lockoutSeconds}s)</span>
+                <span>{t('auth.lockedFor', { seconds: lockoutSeconds })}</span>
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>{t('auth.signInBtn')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -233,9 +240,9 @@ export const LoginPage: React.FC = () => {
 
           <div className="mt-6 border-t border-slate-200 pt-5 text-center">
             <p className="text-xs text-slate-600">
-              New to the café?{' '}
+              {t('auth.newToCafe')}{' '}
               <Link to="/register" className="font-semibold text-[#0F8B8D] hover:underline">
-                Create a Customer Account
+                {t('auth.createCustomerAccount')}
               </Link>
             </p>
           </div>

@@ -444,3 +444,142 @@ class AuthenticationAndSecurityTests(TestCase):
         resp = self.client.get('/api/auth/csrf/')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertIn('csrfToken', resp.data)
+
+
+class CSRFProtectionTests(TestCase):
+    """
+    Automated security tests verifying CSRF protection enforcement across
+    cookie-authenticated state-changing endpoints, token refresh, and logout.
+    Uses APIClient(enforce_csrf_checks=True) to strictly enforce Django CSRF middleware.
+    """
+    def setUp(self):
+        self.client = APIClient(enforce_csrf_checks=True)
+        self.user = User.objects.create_user(
+            email='csrf_test@gmail.com',
+            full_name='CSRF Test User',
+            password='SecurePassword123!',
+            role=UserRole.CUSTOMER
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.access_token = str(refresh.access_token)
+        self.refresh_token = str(refresh)
+
+    def _get_csrf_credentials(self):
+        """Helper to get a valid CSRF token and cookie from /api/auth/csrf/"""
+        res = self.client.get('/api/auth/csrf/')
+        token = res.data['csrfToken']
+        return token
+
+    # 1. POST with valid CSRF token -> Accepted (200 OK)
+    def test_post_with_valid_csrf_accepted(self):
+        token = self._get_csrf_credentials()
+        self.client.cookies['access_token'] = self.access_token
+        response = self.client.post(
+            '/api/customer/dashboard/',
+            {},
+            HTTP_X_CSRFTOKEN=token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # 2. POST without CSRF token -> HTTP 403 Forbidden
+    def test_post_without_csrf_rejected_403(self):
+        self.client.cookies['access_token'] = self.access_token
+        response = self.client.post('/api/customer/dashboard/', {})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('CSRF Failed', response.data['detail'])
+
+    # 3. POST with invalid CSRF token -> HTTP 403 Forbidden
+    def test_post_with_invalid_csrf_rejected_403(self):
+        self._get_csrf_credentials()  # Sets csrftoken cookie
+        self.client.cookies['access_token'] = self.access_token
+        response = self.client.post(
+            '/api/customer/dashboard/',
+            {},
+            HTTP_X_CSRFTOKEN='forged_invalid_csrf_token'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('CSRF Failed', response.data['detail'])
+
+    # 4. GET without CSRF token -> Not rejected by CSRF (200 OK)
+    def test_get_without_csrf_accepted(self):
+        self.client.cookies['access_token'] = self.access_token
+        response = self.client.get('/api/customer/dashboard/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # 5. HEAD without CSRF token -> Not rejected by CSRF (200 OK)
+    def test_head_without_csrf_accepted(self):
+        self.client.cookies['access_token'] = self.access_token
+        response = self.client.head('/api/customer/dashboard/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # 6. OPTIONS without CSRF token -> Not rejected by CSRF (200 OK)
+    def test_options_without_csrf_accepted(self):
+        self.client.cookies['access_token'] = self.access_token
+        response = self.client.options('/api/customer/dashboard/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # 7. Refresh with valid CSRF token -> Works (200 OK)
+    def test_refresh_with_valid_csrf_accepted(self):
+        token = self._get_csrf_credentials()
+        self.client.cookies['refresh_token'] = self.refresh_token
+        response = self.client.post(
+            '/api/auth/refresh/',
+            {},
+            HTTP_X_CSRFTOKEN=token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access_token', response.cookies)
+
+    # 8. Refresh without CSRF token -> HTTP 403 Forbidden
+    def test_refresh_without_csrf_rejected_403(self):
+        self.client.cookies['refresh_token'] = self.refresh_token
+        response = self.client.post('/api/auth/refresh/', {})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('CSRF Failed', response.data['detail'])
+
+    # 8b. Refresh with invalid CSRF token -> HTTP 403 Forbidden
+    def test_refresh_with_invalid_csrf_rejected_403(self):
+        self._get_csrf_credentials()
+        self.client.cookies['refresh_token'] = self.refresh_token
+        response = self.client.post(
+            '/api/auth/refresh/',
+            {},
+            HTTP_X_CSRFTOKEN='forged_csrf_token'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('CSRF Failed', response.data['detail'])
+
+    # 9. Logout with valid CSRF token -> Works (200 OK)
+    def test_logout_with_valid_csrf_accepted(self):
+        token = self._get_csrf_credentials()
+        self.client.cookies['access_token'] = self.access_token
+        self.client.cookies['refresh_token'] = self.refresh_token
+        response = self.client.post(
+            '/api/auth/logout/',
+            {},
+            HTTP_X_CSRFTOKEN=token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.cookies['access_token'].value, '')
+
+    # 10. Logout without CSRF token -> HTTP 403 Forbidden
+    def test_logout_without_csrf_rejected_403(self):
+        self.client.cookies['access_token'] = self.access_token
+        self.client.cookies['refresh_token'] = self.refresh_token
+        response = self.client.post('/api/auth/logout/', {})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('CSRF Failed', response.data['detail'])
+
+    # 10b. Logout with invalid CSRF token -> HTTP 403 Forbidden
+    def test_logout_with_invalid_csrf_rejected_403(self):
+        self._get_csrf_credentials()
+        self.client.cookies['access_token'] = self.access_token
+        self.client.cookies['refresh_token'] = self.refresh_token
+        response = self.client.post(
+            '/api/auth/logout/',
+            {},
+            HTTP_X_CSRFTOKEN='forged_csrf_token'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('CSRF Failed', response.data['detail'])
+

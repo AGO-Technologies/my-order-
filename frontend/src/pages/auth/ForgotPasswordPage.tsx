@@ -3,10 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CreditCard, KeyRound, Lock, Eye, EyeOff, CheckCircle, ArrowRight, ArrowLeft, AlertCircle, Clock } from 'lucide-react';
 import { apiRequest } from '../../services/api';
 import { TypographicLogo } from '../../components/TypographicLogo';
+import { LanguageSelector } from '../../components/LanguageSelector';
+import { useTranslation } from '../../i18n';
 import { PasswordRequirements, evaluatePasswordRules } from '../../components/PasswordRequirements';
 
 export const ForgotPasswordPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Step 1: Student ID, Step 2: OTP, Step 3: New Password
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -160,16 +163,23 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Top Bar with Language Selector */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-10">
+        <LanguageSelector variant="auth" />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
         <TypographicLogo size="lg" showSubtitle={true} />
         <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-[#16324F] font-serif">
-          Password Recovery
+          {step === 1 && t('forgot.step1Title')}
+          {step === 2 && t('forgot.step2Title')}
+          {step === 3 && t('forgot.step3Title')}
         </h2>
         <p className="mt-1 text-center text-sm text-slate-600">
-          {step === 1 && 'Enter your Student ID'}
-          {step === 2 && 'Enter the 5-minute verification code'}
-          {step === 3 && 'Set a new password'}
+          {step === 1 && t('forgot.step1Subtitle')}
+          {step === 2 && t('forgot.step2Subtitle')}
+          {step === 3 && t('forgot.step3Subtitle')}
         </p>
 
         {/* Wizard Step Indicator */}
@@ -210,7 +220,7 @@ export const ForgotPasswordPage: React.FC = () => {
             <form className="space-y-5" onSubmit={handleRequestOtp}>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#16324F]/80">
-                  Enter your Student ID
+                  {t('forgot.enterStudentId')}
                 </label>
                 <div className="mt-1.5 relative rounded-lg shadow-2xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -226,7 +236,7 @@ export const ForgotPasswordPage: React.FC = () => {
                   />
                 </div>
                 <p className="mt-1.5 text-xs text-slate-500">
-                  A 6-digit OTP will be dispatched to the email registered with this Student ID.
+                  {t('auth.studentIdHint')}
                 </p>
               </div>
 
@@ -238,11 +248,11 @@ export const ForgotPasswordPage: React.FC = () => {
                 {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Sending OTP...</span>
+                    <span>{t('forgot.sendingOtp')}</span>
                   </>
                 ) : (
                   <>
-                    <span>Send OTP</span>
+                    <span>{t('forgot.sendOtp')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -256,7 +266,7 @@ export const ForgotPasswordPage: React.FC = () => {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#16324F]/80">
-                    6-Digit OTP Code
+                    {t('forgot.otpLabel')}
                   </label>
                   <div className={`flex items-center gap-1 text-xs font-mono font-semibold ${
                     otpTimerSeconds > 60 ? 'text-[#16324F]/70' : 'text-red-600 animate-pulse'
@@ -281,7 +291,7 @@ export const ForgotPasswordPage: React.FC = () => {
                   />
                 </div>
                 <p className="mt-1.5 text-xs text-slate-500 text-center">
-                  Check your registered Gmail inbox for the verification code.
+                  {otpTimerSeconds <= 0 ? t('forgot.codeExpired') : `${t('forgot.codeExpiresIn')} ${formatTimer(otpTimerSeconds)}`}
                 </p>
               </div>
 
@@ -293,11 +303,11 @@ export const ForgotPasswordPage: React.FC = () => {
                 {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Verifying OTP...</span>
+                    <span>{t('forgot.verifying')}</span>
                   </>
                 ) : (
                   <>
-                    <span>Verify Code</span>
+                    <span>{t('forgot.verifyOtp')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -309,7 +319,7 @@ export const ForgotPasswordPage: React.FC = () => {
                 className="w-full text-xs font-semibold text-slate-600 hover:text-[#16324F] hover:underline flex items-center justify-center gap-1.5 pt-2"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Change Student ID / Request another code</span>
+                <span>{t('forgot.requestNewCode')}</span>
               </button>
             </form>
           )}
@@ -319,7 +329,7 @@ export const ForgotPasswordPage: React.FC = () => {
             <form className="space-y-5" onSubmit={handleResetPassword}>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#16324F]/80">
-                  New Password
+                  {t('forgot.newPasswordLabel')}
                 </label>
                 <div className="mt-1.5 relative rounded-lg shadow-2xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -345,7 +355,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#16324F]/80">
-                  Confirm New Password
+                  {t('forgot.confirmNewPasswordLabel')}
                 </label>
                 <div className="mt-1.5 relative rounded-lg shadow-2xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -379,11 +389,11 @@ export const ForgotPasswordPage: React.FC = () => {
                 {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Updating Password...</span>
+                    <span>{t('forgot.updatingPassword')}</span>
                   </>
                 ) : (
                   <>
-                    <span>Reset Password</span>
+                    <span>{t('forgot.resetPasswordBtn')}</span>
                     <CheckCircle className="w-4 h-4" />
                   </>
                 )}
@@ -393,7 +403,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
           <div className="mt-6 border-t border-slate-200 pt-5 text-center">
             <Link to="/login" className="text-xs font-semibold text-[#0F8B8D] hover:underline">
-              Return to Login
+              {t('forgot.backToLogin')}
             </Link>
           </div>
         </div>

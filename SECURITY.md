@@ -101,11 +101,16 @@ The University Café Pre-Order System enforces defense-in-depth across multiple 
 - It verifies that the user is active (`is_active = True`) and enforces the 3-minute inactivity check before permitting view execution.
 - **Implementation File:** `backend/accounts/authentication.py` (`JWTCookieAuthentication`).
 
-### CSRF Protection
-- Cross-Site Request Forgery is mitigated using Django's built-in `CsrfViewMiddleware`.
+### CSRF Protection and Enforcement
+- Cross-Site Request Forgery is actively enforced across all state-changing endpoints using Django's built-in `CsrfViewMiddleware` (integrated via DRF's `CSRFCheck` processing API).
+- **Default DRF Exemption Overridden:** Because Django REST Framework's `APIView` normally sets `@csrf_exempt`, the application explicitly enforces CSRF checks where cookie authentication is used:
+  1. **`JWTCookieAuthentication`:** When requests are authenticated using `access_token` cookies, `enforce_csrf(request)` is executed. State-changing methods (`POST`, `PUT`, `PATCH`, `DELETE`) require a valid CSRF cookie and matching `X-CSRFToken` header. Safe methods (`GET`, `HEAD`, `OPTIONS`, `TRACE`) are accepted without requiring CSRF tokens. Requests authenticated via standard non-browser `Authorization: Bearer <token>` headers remain exempt from CSRF checks.
+  2. **`RefreshTokenView` (`/api/auth/refresh/`):** Explicitly enforces CSRF validation before rotating tokens. Requests missing the CSRF token or containing an invalid/forged token are rejected with HTTP 403 Forbidden (`CSRF Failed`).
+  3. **`LogoutView` (`/api/auth/logout/`):** Explicitly enforces CSRF validation before invalidating sessions and blacklisting tokens. Requests missing or containing forged CSRF tokens are rejected with HTTP 403 Forbidden (`CSRF Failed`).
 - `CSRF_COOKIE_HTTPONLY` is set to `False` so the frontend can read the `csrftoken` cookie or fetch it from `GET /api/auth/csrf/`.
-- For all state-changing HTTP methods (`POST`, `PUT`, `PATCH`, `DELETE`), the frontend API client (`frontend/src/services/api.ts`) automatically attaches the `X-CSRFToken` header.
-- **Implementation Files:** `backend/config/settings.py`, `frontend/src/services/api.ts`, `backend/accounts/views.py` (`CSRFTokenView`).
+- The frontend API client (`frontend/src/services/api.ts`) automatically fetches `/api/auth/csrf/` and attaches the `X-CSRFToken` header on all state-changing requests with `credentials: 'include'`.
+- Missing or forged CSRF tokens return `HTTP 403 Forbidden` with an explicit error detail (e.g., `CSRF Failed: CSRF cookie not set.` or `CSRF Failed: CSRF token from the 'X-Csrftoken' HTTP header has incorrect length.`).
+- **Implementation Files:** `backend/accounts/authentication.py` (`enforce_csrf`, `JWTCookieAuthentication`), `backend/accounts/views.py` (`LogoutView`, `RefreshTokenView`, `CSRFTokenView`), `backend/config/settings.py`, `frontend/src/services/api.ts`.
 
 ### Logout and Token Blacklisting
 - Logging out via `POST /api/auth/logout/` performs a full server-side invalidation:

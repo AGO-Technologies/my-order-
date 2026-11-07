@@ -1,7 +1,27 @@
 from django.conf import settings
 from django.utils import timezone
+from rest_framework import exceptions
+from rest_framework.authentication import CSRFCheck
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, AuthenticationFailed
+
+
+def enforce_csrf(request):
+    """
+    Enforces CSRF validation using Django's built-in CsrfViewMiddleware (via DRF's CSRFCheck).
+    Safe methods (GET, HEAD, OPTIONS, TRACE) are accepted without CSRF tokens.
+    State-changing methods (POST, PUT, PATCH, DELETE) require a valid CSRF cookie
+    and matching X-CSRFToken header.
+    """
+    def dummy_get_response(request):
+        return None
+
+    check = CSRFCheck(dummy_get_response)
+    # Populates request.META['CSRF_COOKIE'] from the request cookie
+    check.process_request(request)
+    reason = check.process_view(request, None, (), {})
+    if reason:
+        raise exceptions.PermissionDenied(f'CSRF Failed: {reason}')
 
 
 class JWTCookieAuthentication(JWTAuthentication):
@@ -9,10 +29,15 @@ class JWTCookieAuthentication(JWTAuthentication):
     Custom JWT Authentication that extracts the access token from
     an HttpOnly cookie first, falling back to the Authorization header.
     Also validates 3-minute inactivity timeout for API requests.
+    Enforces CSRF validation for cookie-authenticated state-changing requests.
     """
+    def enforce_csrf(self, request):
+        enforce_csrf(request)
+
     def authenticate(self, request):
         # 1. Check HttpOnly cookie
         raw_token = request.COOKIES.get('access_token')
+        is_cookie_auth = raw_token is not None
 
         # 2. Fall back to Authorization header if cookie not found
         if raw_token is None:
@@ -23,6 +48,10 @@ class JWTCookieAuthentication(JWTAuthentication):
 
         if raw_token is None:
             return None
+
+        # Enforce CSRF protection for state-changing requests authenticated via cookies
+        if is_cookie_auth:
+            self.enforce_csrf(request)
 
         try:
             validated_token = self.get_validated_token(raw_token)
