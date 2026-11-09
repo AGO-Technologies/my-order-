@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../i18n';
 import { Phase1Modal } from './Phase1Modal';
 import { Clock, Menu } from 'lucide-react';
-import { TypographicLogo } from './TypographicLogo';
+import { SystemLogo } from './SystemLogo';
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#F7F5EF] overflow-hidden">
+    <div className="flex h-screen bg-[#F7F8FC] dark:bg-[#151D2D] overflow-hidden transition-colors duration-150">
       {/* Phase 1 Completion Dismissible Popup */}
       <Phase1Modal />
 
@@ -24,7 +24,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       {/* Mobile Drawer Backdrop & Sidebar */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-xs md:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs md:hidden transition-opacity"
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />
@@ -44,39 +44,39 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-2xs">
+        <header className="h-16 bg-white dark:bg-[#202C40] border-b border-[#E1E6EF] dark:border-[#34435A] px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-2xs transition-colors duration-150">
           <div className="flex items-center gap-3">
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden p-2 rounded-lg text-[#16324F] hover:bg-slate-100 transition-colors"
+              className="md:hidden p-2 rounded-lg text-[#20252D] dark:text-[#F7F8FC] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
               aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             <div className="md:hidden">
-              <TypographicLogo size="sm" showSubtitle={false} />
+              <SystemLogo size="sm" showSubtitle={false} />
             </div>
 
             <div className="hidden md:flex items-center gap-2">
-              <span className="text-sm font-semibold text-[#16324F]">
+              <span className="text-sm font-semibold text-[#20252D] dark:text-[#F7F8FC]">
                 {t('common.systemTitle')}
               </span>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#16324F]/5 text-[#16324F] font-mono font-medium">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#2458A6]/10 dark:bg-[#6F93CD]/20 text-[#2458A6] dark:text-[#6F93CD] font-mono font-medium">
                 {t('common.phase1')}
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 text-xs">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] text-[#64748B] dark:text-[#B8C4D8]">
+              <Clock className="w-3.5 h-3.5 text-[#64748B] dark:text-[#B8C4D8]" />
               <span>{t('common.inactivityGuard', { minutes: 3 })}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#0F8B8D]" />
-              <span className="font-semibold text-[#16324F] max-w-[120px] sm:max-w-none truncate">
+              <span className="w-2 h-2 rounded-full bg-[#2458A6] dark:bg-[#6F93CD]" />
+              <span className="font-semibold text-[#20252D] dark:text-[#F7F8FC] max-w-[120px] sm:max-w-none truncate">
                 {user?.full_name}
               </span>
             </div>
@@ -84,7 +84,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-8 bg-[#F7F5EF]">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 bg-[#F7F8FC] dark:bg-[#151D2D] transition-colors duration-150">
           {children}
         </main>
       </div>

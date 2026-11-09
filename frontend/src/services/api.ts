@@ -89,7 +89,26 @@ export async function apiRequest<T = any>(endpoint: string, options: RequestOpti
   const data = isJson ? await response.json() : await response.text();
 
   if (!response.ok) {
-    const error: any = new Error(data.detail || data.message || 'Request failed');
+    let message = 'Request failed';
+    if (typeof data === 'string') {
+      message = data;
+    } else if (data && typeof data === 'object') {
+      if (typeof data.detail === 'string') {
+        message = data.detail;
+      } else if (typeof data.message === 'string') {
+        message = data.message;
+      } else if (Array.isArray(data.non_field_errors) && data.non_field_errors.length > 0) {
+        message = data.non_field_errors.join(' ');
+      } else {
+        const keys = Object.keys(data);
+        if (keys.length > 0) {
+          const firstVal = data[keys[0]];
+          const valText = Array.isArray(firstVal) ? firstVal.join(' ') : String(firstVal);
+          message = valText;
+        }
+      }
+    }
+    const error: any = new Error(message);
     error.status = response.status;
     error.data = data;
     throw error;

@@ -2,7 +2,7 @@ import type { Translations } from './types';
 
 export const am: Translations = {
   // Common
-  'common.systemTitle': 'የዩኒቨርሲቲ ካፌ ቅድመ-ትዕዛዝ ሥርዓት',
+  'common.systemTitle': 'እኔና ጀለሴ Pre-order System',
   'common.phase1': 'ምዕራፍ 1',
   'common.inactivityGuard': 'የእንቅስቃሴ-አልባነት ጥበቃ: {minutes} ደቂቃ',
   'common.signOut': 'ውጣ',
@@ -14,6 +14,10 @@ export const am: Translations = {
   'common.loadingSession': 'ክፍለ-ጊዜውን በመጫን ላይ...',
   'common.verifyingAuth': 'ፈቃድ በማረጋገጥ ላይ...',
   'common.language': 'ቋንቋ',
+  'common.theme': 'ገጽታ',
+  'common.lightMode': 'የብርሃን ገጽታ',
+  'common.darkMode': 'የጨለማ ገጽታ',
+  'common.toggleTheme': 'ገጽታ ቀይር',
   'common.close': 'ዝጋ',
   'common.continue': 'ቀጥል',
 
@@ -41,7 +45,7 @@ export const am: Translations = {
 
   // Authentication - Login
   'auth.loginTitle': 'ወደ መለያዎ ይግቡ',
-  'auth.loginSubtitle': 'የካፌ ዳሽቦርድዎን ለመጠቀም መለያዎን ያስገቡ',
+  'auth.loginSubtitle': 'የእኔና ጀለሴ Pre-order System ዳሽቦርድዎን ለመጠቀም መለያዎን ያስገቡ',
   'auth.emailLabel': 'የኢሜይል አድራሻ',
   'auth.emailPlaceholder': 'student@gmail.com',
   'auth.passwordLabel': 'የይለፍ ቃል',
@@ -61,7 +65,7 @@ export const am: Translations = {
 
   // Authentication - Register
   'auth.registerTitle': 'የተማሪ ምዝገባ',
-  'auth.registerSubtitle': 'የካምፓስ ካፌ ቅድመ-ትዕዛዝ መለያዎን ይፍጠሩ',
+  'auth.registerSubtitle': 'ለእኔና ጀለሴ Pre-order System መለያዎን ይፍጠሩ',
   'auth.personalInfo': 'የግል መረጃ',
   'auth.fullNameLabel': 'ሙሉ ስም',
   'auth.fullNamePlaceholder': 'አባ ጅፋር ጅማ',

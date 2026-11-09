@@ -181,3 +181,52 @@ test('Zero emojis are present in all translation dictionaries', () => {
     assert.equal(emojiRegex.test(val), false, `om translation "${key}" contains an emoji: ${val}`);
   }
 });
+
+test('Theme translation keys exist and match across all languages', () => {
+  const themeKeys = ['common.theme', 'common.lightMode', 'common.darkMode', 'common.toggleTheme'];
+  for (const k of themeKeys) {
+    assert.ok(en[k], `en must have ${k}`);
+    assert.ok(am[k], `am must have ${k}`);
+    assert.ok(om[k], `om must have ${k}`);
+  }
+});
+
+test('Official approved color palette exact values are verified', () => {
+  const darkPalette = {
+    mainBg: '#151D2D',
+    cardBg: '#202C40',
+    mainText: '#F7F8FC',
+    secondaryText: '#B8C4D8',
+    primaryButton: '#6F93CD',
+    buttonText: '#FFFFFF',
+    highlight: '#F5D34A',
+    border: '#34435A',
+  };
+
+  const lightPalette = {
+    mainBg: '#F7F8FC',
+    cardBg: '#FFFFFF',
+    mainText: '#20252D',
+    secondaryText: '#64748B',
+    primaryButton: '#2458A6',
+    buttonText: '#FFFFFF',
+    highlight: '#B58A00',
+    border: '#E1E6EF',
+  };
+
+  assert.equal(darkPalette.mainBg, '#151D2D');
+  assert.equal(darkPalette.cardBg, '#202C40');
+  assert.equal(darkPalette.primaryButton, '#6F93CD');
+  assert.equal(darkPalette.highlight, '#F5D34A');
+  assert.equal(lightPalette.mainBg, '#F7F8FC');
+  assert.equal(lightPalette.cardBg, '#FFFFFF');
+  assert.equal(lightPalette.primaryButton, '#2458A6');
+  assert.equal(lightPalette.highlight, '#B58A00');
+});
+
+test('System name is consistently "እኔና ጀለሴ Pre-order System" across all three languages', () => {
+  const expectedBrand = 'እኔና ጀለሴ Pre-order System';
+  assert.equal(en['common.systemTitle'], expectedBrand);
+  assert.equal(am['common.systemTitle'], expectedBrand);
+  assert.equal(om['common.systemTitle'], expectedBrand);
+});

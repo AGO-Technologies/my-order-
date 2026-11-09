@@ -15,42 +15,42 @@ export const WorkerProfilePage: React.FC = () => {
       <div className="space-y-6 max-w-3xl">
         <Phase1PlaceholderCard pageTitle="Profile" />
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
-          <h3 className="text-base font-bold text-[#16324F] border-b border-slate-100 pb-3 mb-4">
+        <div className="bg-white dark:bg-[#202C40] rounded-2xl border border-[#E1E6EF] dark:border-[#34435A] p-6 sm:p-8 shadow-xs transition-colors duration-150">
+          <h3 className="text-base font-bold text-[#20252D] dark:text-[#F7F8FC] border-b border-[#E1E6EF] dark:border-[#34435A] pb-3 mb-4">
             {t('profile.workerAccountInfo')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="p-3 bg-slate-50/80 rounded-xl border border-slate-200/80">
-              <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
-                <User className="w-3.5 h-3.5 text-[#0F8B8D]" />
+            <div className="p-3 bg-[#F7F8FC] dark:bg-[#151D2D] rounded-xl border border-[#E1E6EF] dark:border-[#34435A]">
+              <div className="flex items-center gap-2 text-[#64748B] dark:text-[#B8C4D8] text-xs font-semibold mb-1">
+                <User className="w-3.5 h-3.5 text-[#2458A6] dark:text-[#6F93CD]" />
                 <span>{t('auth.fullNameLabel')}</span>
               </div>
-              <p className="font-semibold text-[#16324F]">{user.full_name}</p>
+              <p className="font-semibold text-[#20252D] dark:text-[#F7F8FC]">{user.full_name}</p>
             </div>
 
-            <div className="p-3 bg-slate-50/80 rounded-xl border border-slate-200/80">
-              <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
-                <Mail className="w-3.5 h-3.5 text-[#0F8B8D]" />
+            <div className="p-3 bg-[#F7F8FC] dark:bg-[#151D2D] rounded-xl border border-[#E1E6EF] dark:border-[#34435A]">
+              <div className="flex items-center gap-2 text-[#64748B] dark:text-[#B8C4D8] text-xs font-semibold mb-1">
+                <Mail className="w-3.5 h-3.5 text-[#2458A6] dark:text-[#6F93CD]" />
                 <span>{t('auth.emailLabel')}</span>
               </div>
-              <p className="font-semibold text-[#16324F] truncate">{user.email}</p>
+              <p className="font-semibold text-[#20252D] dark:text-[#F7F8FC] truncate">{user.email}</p>
             </div>
 
-            <div className="p-3 bg-slate-50/80 rounded-xl border border-slate-200/80">
-              <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#0F8B8D]" />
+            <div className="p-3 bg-[#F7F8FC] dark:bg-[#151D2D] rounded-xl border border-[#E1E6EF] dark:border-[#34435A]">
+              <div className="flex items-center gap-2 text-[#64748B] dark:text-[#B8C4D8] text-xs font-semibold mb-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#2458A6] dark:text-[#6F93CD]" />
                 <span>{t('profile.assignedRole')}</span>
               </div>
-              <p className="font-semibold text-[#0F8B8D]">{t('roles.cafeWorker')}</p>
+              <p className="font-semibold text-[#2458A6] dark:text-[#6F93CD]">{t('roles.cafeWorker')}</p>
             </div>
 
-            <div className="p-3 bg-slate-50/80 rounded-xl border border-slate-200/80">
-              <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
-                <Monitor className="w-3.5 h-3.5 text-[#0F8B8D]" />
+            <div className="p-3 bg-[#F7F8FC] dark:bg-[#151D2D] rounded-xl border border-[#E1E6EF] dark:border-[#34435A]">
+              <div className="flex items-center gap-2 text-[#64748B] dark:text-[#B8C4D8] text-xs font-semibold mb-1">
+                <Monitor className="w-3.5 h-3.5 text-[#2458A6] dark:text-[#6F93CD]" />
                 <span>{t('profile.allowedDevices')}</span>
               </div>
-              <p className="font-semibold text-[#16324F]">
+              <p className="font-semibold text-[#20252D] dark:text-[#F7F8FC]">
                 {t('profile.devicesLimitDesc', { count: user.allowed_devices })}
               </p>
             </div>

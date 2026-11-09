@@ -16,8 +16,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../i18n';
-import { TypographicLogo } from './TypographicLogo';
+import { SystemLogo } from './SystemLogo';
 import { LanguageSelector } from './LanguageSelector';
+import { ThemeToggle } from './ThemeToggle';
 import type { UserRole } from '../types/auth';
 
 interface NavItem {
@@ -70,14 +71,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick, onClose }) => {
   const roleTitle = roleTitleMap[user.role] || user.role;
 
   return (
-    <aside className="w-64 bg-[#16324F] text-[#F7F5EF] flex flex-col h-full select-none shrink-0 shadow-lg md:shadow-none">
+    <aside className="w-64 bg-white dark:bg-[#202C40] text-[#20252D] dark:text-[#F7F8FC] border-r border-[#E1E6EF] dark:border-[#34435A] flex flex-col h-full select-none shrink-0 shadow-lg md:shadow-none transition-colors duration-150">
       {/* Brand Header */}
-      <div className="p-5 border-b border-white/10 flex items-center justify-between">
-        <TypographicLogo size="sm" showSubtitle={true} variant="dark" />
+      <div className="p-5 border-b border-[#E1E6EF] dark:border-[#34435A] flex items-center justify-between">
+        <SystemLogo size="sm" showSubtitle={true} />
         {onClose && (
           <button
             onClick={onClose}
-            className="md:hidden p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            className="md:hidden p-1.5 rounded-lg text-[#64748B] hover:text-[#20252D] dark:text-[#B8C4D8] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
             aria-label="Close navigation"
           >
             <X className="w-5 h-5" />
@@ -87,15 +88,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick, onClose }) => {
 
       {/* Role Identity Badge */}
       <div className="px-5 pt-4 pb-2">
-        <div className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#0f2236] text-[#F7F5EF] border border-[#0F8B8D]/40 flex items-center gap-2 w-full">
-          <ShieldCheck className="w-3.5 h-3.5 text-[#0F8B8D] shrink-0" />
+        <div className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#F7F8FC] dark:bg-[#151D2D] text-[#20252D] dark:text-[#F7F8FC] border border-[#E1E6EF] dark:border-[#34435A] flex items-center gap-2 w-full">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#2458A6] dark:text-[#6F93CD] shrink-0" />
           <span className="truncate">{t('common.role')}: {roleTitle}</span>
         </div>
       </div>
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
-        <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-white/40">
+        <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-[#B8C4D8]/70">
           {t('common.menu')}
         </p>
         {navItems.map((item) => (
@@ -106,8 +107,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick, onClose }) => {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive
-                  ? 'bg-[#0F8B8D] text-white shadow-xs font-semibold'
-                  : 'text-white/80 hover:bg-[#0f2236] hover:text-white'
+                  ? 'bg-[#2458A6] dark:bg-[#6F93CD] text-white shadow-xs font-semibold'
+                  : 'text-[#64748B] dark:text-[#B8C4D8] hover:bg-[#F7F8FC] dark:hover:bg-[#151D2D] hover:text-[#20252D] dark:hover:text-[#F7F8FC]'
               }`
             }
           >
@@ -117,23 +118,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick, onClose }) => {
         ))}
       </nav>
 
-      {/* Language Selector */}
-      <LanguageSelector variant="sidebar" />
+      {/* Controls: Theme Switcher & Language Selector */}
+      <div className="border-t border-[#E1E6EF] dark:border-[#34435A] pt-2 pb-1 bg-white dark:bg-[#202C40]">
+        <ThemeToggle variant="sidebar" />
+        <LanguageSelector variant="sidebar" />
+      </div>
 
       {/* User Info & Logout Footer */}
-      <div className="p-4 border-t border-white/10 bg-[#0f2236]/70">
+      <div className="p-4 border-t border-[#E1E6EF] dark:border-[#34435A] bg-[#F7F8FC] dark:bg-[#151D2D]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-[#0F8B8D] flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-xs">
+          <div className="w-8 h-8 rounded-lg bg-[#2458A6] dark:bg-[#6F93CD] flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-xs">
             {user.full_name.charAt(0).toUpperCase()}
           </div>
           <div className="overflow-hidden">
-            <p className="text-xs font-semibold text-white truncate">{user.full_name}</p>
-            <p className="text-[11px] text-white/60 truncate">{user.email}</p>
+            <p className="text-xs font-semibold text-[#20252D] dark:text-[#F7F8FC] truncate">{user.full_name}</p>
+            <p className="text-[11px] text-[#64748B] dark:text-[#B8C4D8] truncate">{user.email}</p>
           </div>
         </div>
         <button
           onClick={() => logout(false)}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-white/90 bg-white/5 hover:bg-red-500/20 hover:text-red-200 border border-white/10 rounded-lg transition-colors duration-150"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-[#20252D] dark:text-[#F7F8FC] bg-white dark:bg-[#202C40] hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 dark:hover:text-red-400 border border-[#E1E6EF] dark:border-[#34435A] rounded-lg transition-colors duration-150 cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>{t('common.signOut')}</span>

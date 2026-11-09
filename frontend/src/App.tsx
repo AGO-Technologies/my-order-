@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider, useTranslation } from './i18n';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -34,10 +35,10 @@ const RootRedirect: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
+      <div className="flex h-screen w-screen items-center justify-center bg-[#F7F8FC] dark:bg-[#151D2D] transition-colors duration-150">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" />
-          <p className="text-sm text-slate-500 font-medium">{t('common.loadingSession')}</p>
+          <div className="w-8 h-8 border-4 border-[#E1E6EF] dark:border-[#34435A] border-t-[#2458A6] dark:border-t-[#6F93CD] rounded-full animate-spin" />
+          <p className="text-sm text-[#64748B] dark:text-[#B8C4D8] font-medium">{t('common.loadingSession')}</p>
         </div>
       </div>
     );
@@ -52,9 +53,10 @@ const RootRedirect: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <BrowserRouter>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <BrowserRouter>
           <Routes>
           {/* Public Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -164,6 +166,7 @@ export const App: React.FC = () => {
       </BrowserRouter>
     </AuthProvider>
     </LanguageProvider>
+    </ThemeProvider>
   );
 };
 

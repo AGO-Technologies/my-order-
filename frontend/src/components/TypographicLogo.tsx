@@ -36,28 +36,28 @@ export const TypographicLogo: React.FC<TypographicLogoProps> = ({
       <div
         className={`${sizeClasses.badge} flex items-center justify-center rounded-xl ${
           isDark
-            ? 'bg-[#0f2236] border border-[#0F8B8D]/40 shadow-sm'
-            : 'bg-[#16324F] border border-[#16324F] shadow-sm'
+            ? 'bg-[#202C40] border border-[#34435A] shadow-xs'
+            : 'bg-[#2458A6] border border-[#2458A6]/20 shadow-xs'
         }`}
       >
-        <span className="text-[#F4A261] font-serif">A</span>
-        <span className="text-[#0F8B8D] -ml-1">G</span>
+        <span className="text-[#F5D34A] font-serif">እ</span>
+        <span className="text-white dark:text-[#6F93CD] -ml-0.5">ጀ</span>
       </div>
       {showSubtitle && (
         <div className="flex flex-col">
           <span
             className={`${sizeClasses.title} leading-tight font-serif tracking-tight ${
-              isDark ? 'text-white' : 'text-[#16324F]'
+              isDark ? 'text-[#F7F8FC]' : 'text-[#20252D]'
             }`}
           >
-            University Café
+            እኔና ጀለሴ
           </span>
           <span
             className={`${sizeClasses.sub} font-medium tracking-wide uppercase ${
-              isDark ? 'text-[#F7F5EF]/70' : 'text-slate-500'
+              isDark ? 'text-[#B8C4D8]' : 'text-[#64748B]'
             }`}
           >
-            Pre-Order System
+            Pre-order System
           </span>
         </div>
       )}

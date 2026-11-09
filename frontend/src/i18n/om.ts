@@ -2,7 +2,7 @@ import type { Translations } from './types';
 
 export const om: Translations = {
   // Common
-  'common.systemTitle': 'Sirna Ajaja Duraa Kaaffee Yuunivarsitii',
+  'common.systemTitle': 'እኔና ጀለሴ Pre-order System',
   'common.phase1': 'Kutaa 1',
   'common.inactivityGuard': 'Eegumsa Sochii Dhabuu: daqiiqaa {minutes}',
   'common.signOut': 'Ba\'i',
@@ -14,6 +14,10 @@ export const om: Translations = {
   'common.loadingSession': 'Bara hojii fe\'aa jira...',
   'common.verifyingAuth': 'Hayatiinsa mirkaneessaa jira...',
   'common.language': 'Afaan',
+  'common.theme': 'Haala Mul\'ataa',
+  'common.lightMode': 'Haala Ifaa',
+  'common.darkMode': 'Haala Dukkanaa',
+  'common.toggleTheme': 'Haala mul\'ataa jijjiiri',
   'common.close': 'Cufi',
   'common.continue': 'Itti fufi',
 
@@ -41,7 +45,7 @@ export const om: Translations = {
 
   // Authentication - Login
   'auth.loginTitle': 'Gara Eenyummeessa Keetti Seeni',
-  'auth.loginSubtitle': 'Daashboordii kaaffee kee fayyadamuuf seeni',
+  'auth.loginSubtitle': 'Daashboordii እኔና ጀለሴ Pre-order System fayyadamuuf seeni',
   'auth.emailLabel': 'Teessoo Imeelii',
   'auth.emailPlaceholder': 'student@gmail.com',
   'auth.passwordLabel': 'Jecha Icciitii',
@@ -61,7 +65,7 @@ export const om: Translations = {
 
   // Authentication - Register
   'auth.registerTitle': 'Galmee Barattootaa',
-  'auth.registerSubtitle': 'Herrega ajaja duraa kaaffee mooraa kee uumi',
+  'auth.registerSubtitle': 'Herrega kee እኔና ጀለሴ Pre-order System uumi',
   'auth.personalInfo': 'Oodeeffannoo Dhuunfaa',
   'auth.fullNameLabel': 'Maqaa Guutuu',
   'auth.fullNamePlaceholder': 'Abbaa Jifaar Jimmaa',

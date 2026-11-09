@@ -2,7 +2,7 @@ import type { Translations } from './types';
 
 export const en: Translations = {
   // Common
-  'common.systemTitle': 'University Café Pre-Order System',
+  'common.systemTitle': 'እኔና ጀለሴ Pre-order System',
   'common.phase1': 'Phase 1',
   'common.inactivityGuard': 'Inactivity Guard: {minutes} min',
   'common.signOut': 'Sign Out',
@@ -14,6 +14,10 @@ export const en: Translations = {
   'common.loadingSession': 'Loading session...',
   'common.verifyingAuth': 'Verifying authorization...',
   'common.language': 'Language',
+  'common.theme': 'Theme',
+  'common.lightMode': 'Light Mode',
+  'common.darkMode': 'Dark Mode',
+  'common.toggleTheme': 'Toggle theme',
   'common.close': 'Close',
   'common.continue': 'Continue',
 
@@ -41,7 +45,7 @@ export const en: Translations = {
 
   // Authentication - Login
   'auth.loginTitle': 'Sign In to Your Account',
-  'auth.loginSubtitle': 'Access your role-based University Café dashboard',
+  'auth.loginSubtitle': 'Access your role-based እኔና ጀለሴ Pre-order System dashboard',
   'auth.emailLabel': 'Email Address',
   'auth.emailPlaceholder': 'student@gmail.com',
   'auth.passwordLabel': 'Password',
@@ -61,7 +65,7 @@ export const en: Translations = {
 
   // Authentication - Register
   'auth.registerTitle': 'Student Registration',
-  'auth.registerSubtitle': 'Create your campus café pre-order account',
+  'auth.registerSubtitle': 'Create your account for እኔና ጀለሴ Pre-order System',
   'auth.personalInfo': 'Personal Information',
   'auth.fullNameLabel': 'Full Name',
   'auth.fullNamePlaceholder': 'Abba Jifar Jimma',

@@ -16,9 +16,10 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { apiRequest } from '../../services/api';
-import { TypographicLogo } from '../../components/TypographicLogo';
+import { SystemLogo } from '../../components/SystemLogo';
 import { PasswordRequirements, evaluatePasswordRules } from '../../components/PasswordRequirements';
 import { LanguageSelector } from '../../components/LanguageSelector';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { useTranslation } from '../../i18n';
 
 export const RegisterPage: React.FC = () => {
@@ -153,26 +154,27 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5EF] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-      {/* Top Bar with Language Selector */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-10">
+    <div className="min-h-screen bg-[#F7F8FC] dark:bg-[#151D2D] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative transition-colors duration-150">
+      {/* Top Bar with Language Selector and Theme Toggle */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-10 flex items-center gap-2">
+        <ThemeToggle variant="auth" />
         <LanguageSelector variant="auth" />
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-2xl flex flex-col items-center">
-        <TypographicLogo size="lg" showSubtitle={true} />
-        <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-[#16324F] font-serif">
+        <SystemLogo size="lg" showSubtitle={true} />
+        <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-[#20252D] dark:text-[#F7F8FC] font-serif">
           {t('auth.registerTitle')}
         </h2>
-        <p className="mt-1 text-center text-sm text-slate-600">
+        <p className="mt-1 text-center text-sm text-[#64748B] dark:text-[#B8C4D8]">
           {t('auth.registerSubtitle')}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
-        <div className="bg-white py-8 px-6 shadow-sm border border-slate-200/90 rounded-2xl sm:px-10">
+        <div className="bg-white dark:bg-[#202C40] py-8 px-6 shadow-sm border border-[#E1E6EF] dark:border-[#34435A] rounded-2xl sm:px-10 transition-colors duration-150">
           {generalError && (
-            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2.5">
+            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-300 text-sm flex items-start gap-2.5">
               <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
               <span>{generalError}</span>
             </div>
@@ -180,19 +182,19 @@ export const RegisterPage: React.FC = () => {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Section 1: Personal Info */}
-            <div className="border-b border-slate-100 pb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#16324F]/70 mb-4">
+            <div className="border-b border-[#E1E6EF] dark:border-[#34435A] pb-5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#20252D] dark:text-[#F7F8FC] mb-4">
                 {t('auth.personalInfo')}
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.fullNameLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <User className="h-4 w-4" />
                     </div>
                     <input
@@ -202,21 +204,21 @@ export const RegisterPage: React.FC = () => {
                       value={formData.full_name}
                       onChange={handleChange}
                       placeholder={t('auth.fullNamePlaceholder')}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
                   {getFieldError('full_name') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('full_name')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('full_name')}</p>
                   )}
                 </div>
 
                 {/* Student ID */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.studentIdLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <CreditCard className="h-4 w-4" />
                     </div>
                     <input
@@ -226,22 +228,22 @@ export const RegisterPage: React.FC = () => {
                       value={formData.student_id}
                       onChange={handleChange}
                       placeholder={t('auth.studentIdPlaceholder')}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.studentIdHint')}</p>
+                  <p className="mt-1 text-[11px] text-[#64748B] dark:text-[#B8C4D8]">{t('auth.studentIdHint')}</p>
                   {getFieldError('student_id') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('student_id')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('student_id')}</p>
                   )}
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.emailLabelGmail')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <Mail className="h-4 w-4" />
                     </div>
                     <input
@@ -251,22 +253,22 @@ export const RegisterPage: React.FC = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder={t('auth.emailPlaceholder')}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.gmailOnlyHint')}</p>
+                  <p className="mt-1 text-[11px] text-[#64748B] dark:text-[#B8C4D8]">{t('auth.gmailOnlyHint')}</p>
                   {getFieldError('email') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('email')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('email')}</p>
                   )}
                 </div>
 
                 {/* Phone Number */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.phoneLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <Phone className="h-4 w-4" />
                     </div>
                     <input
@@ -277,22 +279,22 @@ export const RegisterPage: React.FC = () => {
                       onChange={handleChange}
                       placeholder="0911223344"
                       maxLength={10}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.phoneHint')}</p>
+                  <p className="mt-1 text-[11px] text-[#64748B] dark:text-[#B8C4D8]">{t('auth.phoneHint')}</p>
                   {getFieldError('phone_number') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('phone_number')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('phone_number')}</p>
                   )}
                 </div>
 
                 {/* FAN */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.fanLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <Hash className="h-4 w-4" />
                     </div>
                     <input
@@ -302,31 +304,31 @@ export const RegisterPage: React.FC = () => {
                       value={formData.fan}
                       onChange={handleChange}
                       placeholder={t('auth.fanPlaceholder')}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.fanHint')}</p>
+                  <p className="mt-1 text-[11px] text-[#64748B] dark:text-[#B8C4D8]">{t('auth.fanHint')}</p>
                   {getFieldError('fan') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('fan')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('fan')}</p>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Section 2: Campus Location */}
-            <div className="border-b border-slate-100 pb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#16324F]/70 mb-4">
+            <div className="border-b border-[#E1E6EF] dark:border-[#34435A] pb-5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#20252D] dark:text-[#F7F8FC] mb-4">
                 {t('auth.campusDining')}
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Zone */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.zoneLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <MapPin className="h-4 w-4" />
                     </div>
                     <select
@@ -334,26 +336,26 @@ export const RegisterPage: React.FC = () => {
                       required
                       value={formData.zone}
                       onChange={handleChange}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition cursor-pointer"
                     >
-                      <option value="1">{t('auth.zone1')}</option>
-                      <option value="2">{t('auth.zone2')}</option>
-                      <option value="3">{t('auth.zone3')}</option>
-                      <option value="4">{t('auth.zone4')}</option>
+                      <option value="1" className="bg-white dark:bg-[#202C40] text-[#20252D] dark:text-[#F7F8FC]">{t('auth.zone1')}</option>
+                      <option value="2" className="bg-white dark:bg-[#202C40] text-[#20252D] dark:text-[#F7F8FC]">{t('auth.zone2')}</option>
+                      <option value="3" className="bg-white dark:bg-[#202C40] text-[#20252D] dark:text-[#F7F8FC]">{t('auth.zone3')}</option>
+                      <option value="4" className="bg-white dark:bg-[#202C40] text-[#20252D] dark:text-[#F7F8FC]">{t('auth.zone4')}</option>
                     </select>
                   </div>
                   {getFieldError('zone') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('zone')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('zone')}</p>
                   )}
                 </div>
 
                 {/* Block */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.blockLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <Building className="h-4 w-4" />
                     </div>
                     <input
@@ -364,22 +366,22 @@ export const RegisterPage: React.FC = () => {
                       value={formData.block}
                       onChange={handleChange}
                       placeholder={t('auth.blockPlaceholder')}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.digitsHint')}</p>
+                  <p className="mt-1 text-[11px] text-[#64748B] dark:text-[#B8C4D8]">{t('auth.digitsHint')}</p>
                   {getFieldError('block') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('block')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('block')}</p>
                   )}
                 </div>
 
                 {/* Room */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.roomLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <DoorOpen className="h-4 w-4" />
                     </div>
                     <input
@@ -390,12 +392,12 @@ export const RegisterPage: React.FC = () => {
                       value={formData.room}
                       onChange={handleChange}
                       placeholder={t('auth.roomPlaceholder')}
-                      className="block w-full pl-9 pr-3 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-3 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">{t('auth.digitsHint')}</p>
+                  <p className="mt-1 text-[11px] text-[#64748B] dark:text-[#B8C4D8]">{t('auth.digitsHint')}</p>
                   {getFieldError('room') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('room')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('room')}</p>
                   )}
                 </div>
               </div>
@@ -403,18 +405,18 @@ export const RegisterPage: React.FC = () => {
 
             {/* Section 3: Password */}
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#16324F]/70 mb-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#20252D] dark:text-[#F7F8FC] mb-4">
                 {t('auth.passwordSection')}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Password */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.passwordLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <Lock className="h-4 w-4" />
                     </div>
                     <input
@@ -424,28 +426,28 @@ export const RegisterPage: React.FC = () => {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="••••••••••••"
-                      className="block w-full pl-9 pr-10 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-10 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#64748B] dark:text-[#B8C4D8] hover:text-[#20252D] dark:hover:text-white cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   {getFieldError('password') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('password')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('password')}</p>
                   )}
                 </div>
 
                 {/* Confirm Password */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-bold text-[#20252D] dark:text-[#F7F8FC] mb-1">
                     {t('auth.confirmPasswordLabel')} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative rounded-lg shadow-2xs">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B] dark:text-[#B8C4D8]">
                       <Lock className="h-4 w-4" />
                     </div>
                     <input
@@ -455,18 +457,18 @@ export const RegisterPage: React.FC = () => {
                       value={formData.confirm_password}
                       onChange={handleChange}
                       placeholder="••••••••••••"
-                      className="block w-full pl-9 pr-10 py-2 text-sm bg-slate-50/70 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F8B8D] focus:border-transparent transition"
+                      className="block w-full pl-9 pr-10 py-2 text-sm bg-[#F7F8FC] dark:bg-[#151D2D] border border-[#E1E6EF] dark:border-[#34435A] rounded-lg text-[#20252D] dark:text-[#F7F8FC] placeholder-[#64748B]/60 dark:placeholder-[#B8C4D8]/50 focus:outline-none focus:ring-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] focus:border-transparent transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#64748B] dark:text-[#B8C4D8] hover:text-[#20252D] dark:hover:text-white cursor-pointer"
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   {getFieldError('confirm_password') && (
-                    <p className="mt-1 text-xs text-red-600">{getFieldError('confirm_password')}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{getFieldError('confirm_password')}</p>
                   )}
                 </div>
               </div>
@@ -478,7 +480,7 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl shadow-xs text-sm font-semibold text-white bg-[#0F8B8D] hover:bg-[#0c6e70] active:bg-[#0a5759] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0F8B8D] disabled:opacity-50 transition-all duration-150"
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl shadow-xs text-sm font-semibold text-white bg-[#2458A6] hover:bg-[#1d4888] active:bg-[#163a6f] dark:bg-[#6F93CD] dark:hover:bg-[#5a80be] dark:active:bg-[#4b6fa9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2458A6] dark:focus:ring-[#6F93CD] disabled:opacity-50 transition-all duration-150 cursor-pointer"
             >
               {isLoading ? (
                 <>
@@ -494,10 +496,10 @@ export const RegisterPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-6 border-t border-slate-200 pt-5 text-center">
-            <p className="text-xs text-slate-600">
+          <div className="mt-6 border-t border-[#E1E6EF] dark:border-[#34435A] pt-5 text-center">
+            <p className="text-xs text-[#64748B] dark:text-[#B8C4D8]">
               {t('auth.alreadyRegistered')}{' '}
-              <Link to="/login" className="font-semibold text-[#0F8B8D] hover:underline">
+              <Link to="/login" className="font-semibold text-[#2458A6] dark:text-[#6F93CD] hover:underline">
                 {t('common.signIn')}
               </Link>
             </p>

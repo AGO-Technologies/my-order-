@@ -166,6 +166,83 @@ class AuthenticationAndSecurityTests(TestCase):
         self.assertIn('refresh_token', response.cookies)
         self.assertEqual(response.data['user']['role'], UserRole.CUSTOMER)
 
+    # 12b. Login works for all four roles
+    def test_login_all_four_roles(self):
+        roles_to_test = [
+            (UserRole.CUSTOMER, 'login.cust@gmail.com'),
+            (UserRole.CAFE_OWNER, 'login.owner@gmail.com'),
+            (UserRole.CAFE_WORKER, 'login.worker@gmail.com'),
+            (UserRole.ADMIN, 'login.admin@gmail.com'),
+        ]
+        for role, email in roles_to_test:
+            user = User.objects.create_user(
+                email=email,
+                full_name=f'User {role}',
+                password='SecureP@ssword123',
+                role=role,
+                allowed_devices=5
+            )
+            resp = self.client.post('/api/auth/login/', {
+                'email': email,
+                'password': 'SecureP@ssword123',
+                'device_id': f'dev-{role.lower()}',
+                'device_name': 'Test Device'
+            })
+            self.assertEqual(resp.status_code, status.HTTP_200_OK)
+            self.assertEqual(resp.data['user']['role'], role)
+            self.assertIn('access_token', resp.cookies)
+            self.assertIn('refresh_token', resp.cookies)
+
+    # 12c. Login validation error handling (missing fields, wrong credentials)
+    def test_login_validation_errors(self):
+        # Missing device_id returns 400 with field error
+        resp = self.client.post('/api/auth/login/', {
+            'email': 'someuser@gmail.com',
+            'password': 'SomePassword123!',
+        })
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('device_id', resp.data)
+
+        # Missing email returns 400 with field error
+        resp = self.client.post('/api/auth/login/', {
+            'password': 'SomePassword123!',
+            'device_id': 'dev-1',
+        })
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('email', resp.data)
+
+        # Missing password returns 400 with field error
+        resp = self.client.post('/api/auth/login/', {
+            'email': 'someuser@gmail.com',
+            'device_id': 'dev-1',
+        })
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password', resp.data)
+
+        # Non-existent email returns 401
+        resp = self.client.post('/api/auth/login/', {
+            'email': 'nonexistent@gmail.com',
+            'password': 'SomePassword123!',
+            'device_id': 'dev-1',
+        })
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(resp.data.get('detail'), 'Invalid email or password.')
+
+        # Existing user with incorrect password returns 401
+        User.objects.create_user(
+            email='existinguser@gmail.com',
+            full_name='Existing User',
+            password='RealPassword123!',
+            role=UserRole.CUSTOMER
+        )
+        resp = self.client.post('/api/auth/login/', {
+            'email': 'existinguser@gmail.com',
+            'password': 'WrongPassword123!',
+            'device_id': 'dev-1',
+        })
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(resp.data.get('detail'), 'Invalid email or password.')
+
     # 13. Each role can access its correct dashboard
     def test_role_dashboards_access(self):
         # Create users for all 4 roles
